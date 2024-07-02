@@ -4,34 +4,42 @@ on:
   workflow_call:
 
 jobs:
+
   docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
 
-      - name: Setup Docker Build
-        uses: docker/setup-buildx-action@v3.3.0
-
-      - name: Docker Login
-        # You may pin to the exact commit or the version.
-        # uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446
-        uses: docker/login-action@v3.2.0
-        with:
-          # Username used to log against the Docker registry
-          username: endersonpb
-            # Password or personal access token used to log against the Docker registry
-          # password: ${{ secrets.PASSWORD_DOCKER_HUB }}
-          password: ${{ secrets.PASSWORD_DOCKER_HUB }}
-
-      - name: Build and push Docker images
-          # You may pin to the exact commit or the version.
-          # uses: docker/build-push-action@15560696de535e4014efeff63c48f16952e52dd1
-        uses: docker/build-push-action@v6.2.0
-        with:
-            # Build's context is the set of files located in the specified PATH or URL
-          context: .
-            # Path to the Dockerfile
-          file: ./Dockerfile
-            # Push is a shorthand for --output=type=registry
-          push: true
-          tags: endersonpb/go_ci:${{ github.ref_name }}
+    - name: setup Docker Build
+      uses: docker/setup-buildx-action@v2.0.0
+      
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3.0.0
+      with:
+    # Artifact name
+        name: programa
+      
+    - name: Docker Login
+  # You may pin to the exact commit or the version.
+  # uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b
+      uses: docker/login-action@v2.0.0
+      with:
+    # Username used to log against the Docker registry
+        username: endersonpb
+    # Password or personal access token used to log against the Docker registry
+        password: ${{ secrets.PASSWORD_DOCKER_HUB }}
+        
+        
+    - name: Build and push Docker images
+  # You may pin to the exact commit or the version.
+  # uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8
+      uses: docker/build-push-action@v3.0.0
+      with:
+    # Build's context is the set of files located in the specified PATH or URL
+        context: .
+    # Path to the Dockerfile
+        file: ./Dockerfile
+    # Push is a shorthand for --output=type=registry
+        push: true
+    # List of tags
+        tags: endersonpb/go_ci:${{github.ref_name}}
