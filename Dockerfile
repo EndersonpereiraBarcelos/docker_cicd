@@ -7,7 +7,7 @@ WORKDIR /app
 ENV HOST=localhost PORT=5432
 ENV USER=root
 ENV PASSWORD=root
-ENV dbaneme=root
+ENV dbaneme=dbname
 
 COPY ./main main
 
